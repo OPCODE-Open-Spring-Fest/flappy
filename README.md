@@ -3,7 +3,7 @@
 Welcome to the Flappy Bird Game project! This project is designed to help beginners learn Flutter by contributing to an open-source game. The game is a simple clone of the classic Flappy Bird, where the player controls a bird to navigate through barriers without hitting them.
 
 ## Demo
-![Watch Demo Video](flappy_bird.gif)
+![Demo](flappy_bird.gif)
 
 ## Project Overview
 This project is built using Flutter, a popular framework for building cross-platform applications. The game logic, UI, and animations are implemented in Dart. Participants will complete the game by implementing missing functions and logic.
