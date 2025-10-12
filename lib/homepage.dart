@@ -1,5 +1,4 @@
-// import 'dart:async';
-
+import 'dart:async';
 import 'package:flappy_bird/barriers.dart';
 import 'package:flappy_bird/bird.dart';
 import 'package:flutter/material.dart';
@@ -43,26 +42,63 @@ class _HomepageState extends State<Homepage> {
   }
 
   void startGame() {
-    // TODO: Implement the game loop logic here.
-    // Hint: Use a Timer to periodically update the bird's position and barriers.
-    // Hint: Update the bird's position using physics equations.
-    // Hint: Check if the bird is dead and stop the game if necessary.
+    setState(() {
+      isGameStarted = true;
+      time = 0;
+      initialPos = birdY;
+    });
+
+    const double gravity = -4.9; 
+    const double velocity = 2.8; 
+
+    Timer.periodic(const Duration(milliseconds: 30), (timer) {
+      time += 0.03;
+
+      final double displacement = gravity * time * time + velocity * time;
+
+      setState(() {
+        birdY = initialPos - displacement;
+        barrierx1 -= 0.05;
+        barrierx2 -= 0.05;
+
+        if (barrierx1 < -2) barrierx1 += 3.5;
+        if (barrierx2 < -2) barrierx2 += 3.5;
+      });
+
+      if (birdisDead()) {
+        timer.cancel();
+        setState(() => isGameStarted = false);
+        _showDialog();
+      }
+    });
   }
 
   void resetGame() {
-    // TODO: Reset the game state to its initial values.
-    // Hint: Reset birdY, initialPos, time, and isGameStarted.
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+
+    setState(() {
+      birdY = 0.0;
+      initialPos = birdY;
+      time = 0;
+      isGameStarted = false;
+      barrierx1 = 1;
+      barrierx2 = barrierx1 + 1.5;
+    });
+
+    startGame();
   }
 
   void jump() {
-    // TODO: Implement the jump logic.
-    // Hint: Reset the time and update the initial position of the bird.
+    setState(() {
+      time = 0;
+      initialPos = birdY;
+    });
   }
 
   bool birdisDead() {
-    // TODO: Check if the bird is out of bounds.
-    // Hint: Return true if birdY is greater than 1 or less than -1.
-    return false; // Replace this with the correct condition.
+    return birdY > 1 || birdY < -1;
   }
 
   @override
