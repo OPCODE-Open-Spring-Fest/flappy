@@ -1,4 +1,4 @@
-import 'dart:async';
+// import 'dart:async';
 
 import 'package:flappy_bird/barriers.dart';
 import 'package:flappy_bird/bird.dart';
@@ -18,8 +18,6 @@ class _HomepageState extends State<Homepage> {
   bool isGameStarted = false;
   static double barrierx1 = 1;
   double barrierx2 = barrierx1 + 1.5;
-  Timer? gameTimer;
-  int score = 0;
   // ignore: unused_element
   void _showDialog() {
     showDialog(
@@ -30,7 +28,7 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: Colors.brown,
           title: Text('Game Over', style: TextStyle(color: Colors.white)),
           content: Text(
-            'Your bird has fallen!\nScore: $score',
+            'Your bird has fallen!',
             style: TextStyle(color: Colors.white),
           ),
           actions: [
@@ -45,47 +43,15 @@ class _HomepageState extends State<Homepage> {
   }
 
   void startGame() {
-    setState(() {
-      isGameStarted = true;
-    });
-    gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      setState(() {
-        time += 0.05;
-        height = -4.9 * time * time + 2.8 * time;
-        birdY = initialPos - height;
-        barrierx1 -= 0.05;
-        barrierx2 -= 0.05;
-
-        if (barrierx1 < -1.5) {
-          barrierx1 = 1.5;
-          score++;
-        }
-        if (barrierx2 < -1.5) {
-          barrierx2 = 1.5;
-          score++;
-        }
-
-        if (birdisDead()) {
-          gameTimer?.cancel();
-          _showDialog();
-        }
-      });
-    });
+    // TODO: Implement the game loop logic here.
+    // Hint: Use a Timer to periodically update the bird's position and barriers.
+    // Hint: Update the bird's position using physics equations.
+    // Hint: Check if the bird is dead and stop the game if necessary.
   }
 
   void resetGame() {
-    setState(() {
-      birdY = 0.0;
-      initialPos = birdY;
-      time = 0;
-      height = 0;
-      isGameStarted = false;
-      barrierx1 = 1;
-      barrierx2 = barrierx1 + 1.5;
-      score = 0;
-    });
-    gameTimer?.cancel();
-    Navigator.of(context).pop();
+    // TODO: Reset the game state to its initial values.
+    // Hint: Reset birdY, initialPos, time, and isGameStarted.
   }
 
   void jump() {
@@ -94,7 +60,9 @@ class _HomepageState extends State<Homepage> {
   }
 
   bool birdisDead() {
-    return birdY > 1 || birdY < -1;
+    // TODO: Check if the bird is out of bounds.
+    // Hint: Return true if birdY is greater than 1 or less than -1.
+    return false; // Replace this with the correct condition.
   }
 
   @override
@@ -119,18 +87,6 @@ class _HomepageState extends State<Homepage> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      if (isGameStarted)
-                        Container(
-                          alignment: Alignment(-0.8, -0.8),
-                          child: Text(
-                            'Score: $score',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                       AnimatedContainer(
                         duration: Duration(milliseconds: 0),
                         alignment: Alignment(barrierx1, 1),
