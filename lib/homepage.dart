@@ -64,6 +64,7 @@ class _HomepageState extends State<Homepage> {
           barrierx2 = 1.5;
           score++;
         }
+        //score incremented by 1 for each barrier passed
 
         if (birdisDead()) {
           gameTimer?.cancel();
@@ -83,7 +84,7 @@ class _HomepageState extends State<Homepage> {
       barrierx1 = 1;
       barrierx2 = barrierx1 + 1.5;
       score = 0;
-    });
+    });//reset the game variables to their initial values
     gameTimer?.cancel();
     Navigator.of(context).pop();
   }
