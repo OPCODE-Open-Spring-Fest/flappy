@@ -5,6 +5,7 @@ class MyBarrier extends StatelessWidget {
   const MyBarrier({super.key, this.size});
 
   @override
+  //successfully implemented the barrier code
   Widget build(BuildContext context) {
     return Container(
       width: 100,
@@ -15,7 +16,7 @@ class MyBarrier extends StatelessWidget {
           color: const Color.fromARGB(34, 76, 175, 79),
           width: 2,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
     );
   }
