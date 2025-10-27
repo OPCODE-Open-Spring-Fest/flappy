@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flappy_bird/barriers.dart';
 import 'package:flappy_bird/bird.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class _HomepageState extends State<Homepage> {
   double barrierx2 = barrierx1 + 1.5;
   Timer? gameTimer;
   int score = 0;
-  // ignore: unused_element
+
   void _showDialog() {
     showDialog(
       context: context,
@@ -28,15 +27,15 @@ class _HomepageState extends State<Homepage> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.brown,
-          title: Text('Game Over', style: TextStyle(color: Colors.white)),
+          title: const Text('Game Over', style: TextStyle(color: Colors.white)),
           content: Text(
             'Your bird has fallen!\nScore: $score',
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
           actions: [
             TextButton(
               onPressed: resetGame,
-              child: Text('Restart', style: TextStyle(color: Colors.white)),
+              child: const Text('Restart', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -48,14 +47,18 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       isGameStarted = true;
     });
-    gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+
+    gameTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       setState(() {
         time += 0.05;
         height = -4.9 * time * time + 2.8 * time;
         birdY = initialPos - height;
+
+        // Move barriers
         barrierx1 -= 0.05;
         barrierx2 -= 0.05;
 
+        // Reposition barriers and increase score
         if (barrierx1 < -1.5) {
           barrierx1 = 1.5;
           score++;
@@ -64,8 +67,9 @@ class _HomepageState extends State<Homepage> {
           barrierx2 = 1.5;
           score++;
         }
-        //score incremented by 1 for each barrier passed
+        // Score incremented by 1 for each barrier passed
 
+        // Check if bird is dead
         if (birdisDead()) {
           gameTimer?.cancel();
           _showDialog();
@@ -84,7 +88,8 @@ class _HomepageState extends State<Homepage> {
       barrierx1 = 1;
       barrierx2 = barrierx1 + 1.5;
       score = 0;
-    });//reset the game variables to their initial values
+    }); // reset the game variables to their initial values
+
     gameTimer?.cancel();
     Navigator.of(context).pop();
   }
@@ -114,18 +119,18 @@ class _HomepageState extends State<Homepage> {
                     children: [
                       MyBird(birdY: birdY),
                       Container(
-                        alignment: Alignment(0, -0.5),
+                        alignment: const Alignment(0, -0.5),
                         child: Text(
                           isGameStarted ? '' : 'T A P  T O  P L A Y',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       if (isGameStarted)
                         Container(
-                          alignment: Alignment(-0.8, -0.8),
+                          alignment: const Alignment(-0.8, -0.8),
                           child: Text(
                             'Score: $score',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -133,24 +138,24 @@ class _HomepageState extends State<Homepage> {
                           ),
                         ),
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 0),
+                        duration: const Duration(milliseconds: 0),
                         alignment: Alignment(barrierx1, 1),
-                        child: MyBarrier(size: 50.0),
+                        child: const MyBarrier(size: 50.0),
                       ),
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 0),
+                        duration: const Duration(milliseconds: 0),
                         alignment: Alignment(barrierx1, -1),
-                        child: MyBarrier(size: 200.0),
+                        child: const MyBarrier(size: 200.0),
                       ),
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 0),
+                        duration: const Duration(milliseconds: 0),
                         alignment: Alignment(barrierx2, 1),
-                        child: MyBarrier(size: 150.0),
+                        child: const MyBarrier(size: 150.0),
                       ),
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 0),
+                        duration: const Duration(milliseconds: 0),
                         alignment: Alignment(barrierx2, -1),
-                        child: MyBarrier(size: 50.0),
+                        child: const MyBarrier(size: 50.0),
                       ),
                     ],
                   ),
