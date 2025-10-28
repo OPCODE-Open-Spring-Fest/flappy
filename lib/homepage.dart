@@ -29,7 +29,7 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: Colors.brown,
           title: const Text('Game Over', style: TextStyle(color: Colors.white)),
           content: Text(
-            'Your bird has fallen!\nScore: $score',
+            'Your bird has fallen!\nScore: $score',//display the score when game is over
             style: const TextStyle(color: Colors.white),
           ),
           actions: [
@@ -61,7 +61,7 @@ class _HomepageState extends State<Homepage> {
         barrierx1 -= 0.05;
         barrierx2 -= 0.05;
 
-        // Reposition barriers and increase score
+        // Reposition barriers and score incremented by 1 for each barrier passed
         if (barrierx1 < -1.5) {
           barrierx1 = 1.5;
           score++;
@@ -157,6 +157,7 @@ class _HomepageState extends State<Homepage> {
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
+                      //score board implemented 
                       if (isGameStarted)
                         Container(
                           alignment: const Alignment(-0.8, -0.8),
