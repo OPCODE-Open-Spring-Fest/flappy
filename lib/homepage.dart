@@ -54,12 +54,12 @@ class _HomepageState extends State<Homepage> {
     gameTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       setState(() {
         time += 0.05;
-        height = -4.9 * time * time + 2.8 * time;
+        height = -4.2 * time * time + 2.6 * time;
         birdY = initialPos - height;
 
         // Move barriers
-        barrierx1 -= 0.05;
-        barrierx2 -= 0.05;
+        barrierx1 -= 0.03;
+        barrierx2 -= 0.03;
 
         // Reposition barriers and score incremented by 1 for each barrier passed
         if (barrierx1 < -1.5) {
@@ -98,9 +98,13 @@ class _HomepageState extends State<Homepage> {
   }
 
   void jump() {
-    time = 0;
-    initialPos = birdY;
+    setState(() {
+      time = 0;
+      initialPos = birdY;
+      birdY -= 0.05; 
+    });
   }
+
 
   bool birdisDead() {
     // Check if bird hits top or bottom of screen

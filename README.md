@@ -71,6 +71,7 @@ To get started with this project, you need to clone the repository to your local
 - Install Flutter: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
 - Basic understanding of Dart and Flutter (not mandatory; hints are provided).
 
+
 ## Running the Project
 1. Ensure Flutter is installed and set up on your system.
 2. Run the following commands in your terminal:
