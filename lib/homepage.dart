@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flappy_bird/barriers.dart';
+
 import 'package:flappy_bird/bird.dart';
 import 'package:flutter/material.dart';
-
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
