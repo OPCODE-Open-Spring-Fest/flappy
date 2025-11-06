@@ -16,7 +16,7 @@ class _HomepageState extends State<Homepage> {
   double initialPos = birdY;
   double height = 0, time = 0;
   bool isGameStarted = false;
-  static double barrierx1 = 2;
+  static double barrierx1 = 3;
   double barrierx2 = barrierx1 + 2.5;
 
   Timer? gameTimer;
@@ -98,8 +98,8 @@ class _HomepageState extends State<Homepage> {
       time = 0;
       height = 0;
       isGameStarted = false;
-      barrierx1 = 1;
-      barrierx2 = barrierx1 + 1.5;
+      barrierx1 = 3;
+      barrierx2 = barrierx1 + 2.5;
     });
   }
 
