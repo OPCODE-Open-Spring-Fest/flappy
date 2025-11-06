@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flappy_bird/barriers.dart';
 import 'package:flappy_bird/bird.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +16,16 @@ class _HomepageState extends State<Homepage> {
   double initialPos = birdY;
   double height = 0, time = 0;
   bool isGameStarted = false;
-  static double barrierx1 = 1;
-  double barrierx2 = barrierx1 + 1.5;
-  Timer? gameTimer;
-  int score = 0;
+  static double barrierx1 = 2;
+  double barrierx2 = barrierx1 + 2.5;
 
+  Timer? gameTimer;
+  double gravity = 4.5; // Gravity constant (positive, pulls down)
+  // <-- CORRECTION 1: Velocity must be negative for an upward jump
+  double velocity = -2.5; // Jump velocity (negative, pushes up)
+  double barrierSpeed = 0.05; // Speed of barriers moving
+
+  // ignore: unused_element
   void _showDialog() {
     showDialog(
       context: context,
@@ -27,18 +33,15 @@ class _HomepageState extends State<Homepage> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.brown,
-          title: const Text('Game Over', style: TextStyle(color: Colors.white)),
+          title: Text('Game Over', style: TextStyle(color: Colors.white)),
           content: Text(
-            'Your bird has fallen!\nScore: $score',//display the score when game is over
-            style: const TextStyle(color: Colors.white),
+            'Your bird has fallen!',
+            style: TextStyle(color: Colors.white),
           ),
           actions: [
             TextButton(
               onPressed: resetGame,
-              child: const Text(
-                'Restart',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text('Restart', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -47,96 +50,97 @@ class _HomepageState extends State<Homepage> {
   }
 
   void startGame() {
-    setState(() {
-      isGameStarted = true;
-    });
+    isGameStarted = true;
 
-    gameTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+    gameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      // Update time
+      time += 0.05;
+
+      // <-- CORRECTION 2: Use standard kinematic equation s = v_0*t + 0.5*a*t^2
+      // Calculate vertical displacement (height)
+      height = (0.5 * gravity * time * time) + (velocity * time);
+
       setState(() {
-        time += 0.05;
-        height = -4.2 * time * time + 2.6 * time;
-        birdY = initialPos - height;
+        // <-- CORRECTION 3: Update birdY by ADDING displacement
+        // A negative displacement (jump) makes birdY smaller (moves up)
+        // A positive displacement (gravity) makes birdY larger (moves down)
+        birdY = initialPos + height;
+      });
 
-        // Move barriers
-        barrierx1 -= 0.03;
-        barrierx2 -= 0.03;
-
-        // Reposition barriers and score incremented by 1 for each barrier passed
+      // Move barriers
+      setState(() {
         if (barrierx1 < -1.5) {
           barrierx1 = 1.5;
-          score++;
+        } else {
+          barrierx1 -= barrierSpeed;
         }
+
         if (barrierx2 < -1.5) {
           barrierx2 = 1.5;
-          score++;
-        }
-        // Score incremented by 1 for each barrier passed
-
-        // Check if bird is dead
-        if (birdisDead()) {
-          gameTimer?.cancel();
-          _showDialog();
+        } else {
+          barrierx2 -= barrierSpeed;
         }
       });
+
+      // Check if bird is dead
+      if (birdisDead()) {
+        timer.cancel();
+        _showDialog();
+      }
     });
   }
 
   void resetGame() {
+    Navigator.pop(context); // Close the dialog
     setState(() {
-      birdY = 0.0;
+      birdY = 0;
       initialPos = birdY;
       time = 0;
       height = 0;
       isGameStarted = false;
       barrierx1 = 1;
       barrierx2 = barrierx1 + 1.5;
-      score = 0;
-    }); // reset the game variables to their initial values
-
-    gameTimer?.cancel();
-    Navigator.of(context).pop();
+    });
   }
 
   void jump() {
     setState(() {
-      time = 0;
-      initialPos = birdY;
-      birdY -= 0.05; 
+      time = 0; // Reset time for the physics equation
+      initialPos = birdY; // Set the start of the jump to the bird's current position
     });
   }
 
-
   bool birdisDead() {
-    // Check if bird hits top or bottom of screen
+    // Check if bird is out of bounds (top or bottom)
     if (birdY > 1 || birdY < -1) {
       return true;
     }
 
-    // Check collision with first barrier
-    if (barrierx1 >= -0.15 && barrierx1 <= 0.15) {
-      // Bottom barrier (size 50) - small barrier
-      if (birdY > 0.6) {
-        return true;
-      }
-      // Top barrier (size 200) - large barrier
-      if (birdY < -0.2) {
+    // <-- CORRECTION 4: Swapped collision logic to match build() method.
+    
+    // Check collision with first set of barriers (Top: 200, Bottom: 50)
+    // This has *more* barrier, so it should have the *smaller* gap.
+    if ((barrierx1 >= -0.1 && barrierx1 <= 0.1)) {
+      if (birdY <= -0.4 || birdY >= 0.4) { // Small gap
         return true;
       }
     }
 
-    // Check collision with second barrier
-    if (barrierx2 >= -0.15 && barrierx2 <= 0.15) {
-      // Bottom barrier (size 150) - large barrier
-      if (birdY > 0.0) {
-        return true;
-      }
-      // Top barrier (size 50) - small barrier
-      if (birdY < -0.6) {
+    // Check collision with second set of barriers (Top: 50, Bottom: 150)
+    // This has *less* barrier, so it should have the *larger* gap.
+    if ((barrierx2 >= -0.1 && barrierx2 <= 0.1)) {
+      if (birdY <= -0.6 || birdY >= 0.6) { // Large gap
         return true;
       }
     }
 
     return false;
+  }
+
+  @override
+  void dispose() {
+    gameTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -155,44 +159,35 @@ class _HomepageState extends State<Homepage> {
                     children: [
                       MyBird(birdY: birdY),
                       Container(
-                        alignment: const Alignment(0, -0.5),
+                        alignment: Alignment(0, -0.5),
                         child: Text(
                           isGameStarted ? '' : 'T A P  T O  P L A Y',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      //score board implemented 
-                      if (isGameStarted)
-                        Container(
-                          alignment: const Alignment(-0.8, -0.8),
-                          child: Text(
-                            'Score: $score',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      
+                      // Barrier 1 (Top: 200, Bottom: 50) -> Small Gap
                       AnimatedContainer(
-                        duration: const Duration(milliseconds: 0),
-                        alignment: Alignment(barrierx1, 1),
-                        child: const MyBarrier(size: 50.0),
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 0),
+                        duration: Duration(milliseconds: 0),
                         alignment: Alignment(barrierx1, -1),
-                        child: const MyBarrier(size: 200.0),
+                        child: MyBarrier(size: 200.0), // Large top
                       ),
                       AnimatedContainer(
-                        duration: const Duration(milliseconds: 0),
-                        alignment: Alignment(barrierx2, 1),
-                        child: const MyBarrier(size: 150.0),
+                        duration: Duration(milliseconds: 0),
+                        alignment: Alignment(barrierx1, 1),
+                        child: MyBarrier(size: 50.0),  // Small bottom
                       ),
+                      
+                      // Barrier 2 (Top: 50, Bottom: 150) -> Large Gap
                       AnimatedContainer(
-                        duration: const Duration(milliseconds: 0),
+                        duration: Duration(milliseconds: 0),
                         alignment: Alignment(barrierx2, -1),
-                        child: const MyBarrier(size: 50.0),
+                        child: MyBarrier(size: 50.0),  // Small top
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 0),
+                        alignment: Alignment(barrierx2, 1),
+                        child: MyBarrier(size: 150.0), // Large bottom
                       ),
                     ],
                   ),
