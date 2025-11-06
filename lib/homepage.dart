@@ -91,16 +91,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void resetGame() {
-    Navigator.pop(context); // Close the dialog
-    setState(() {
-      birdY = 0;
-      initialPos = birdY;
-      time = 0;
-      height = 0;
-      isGameStarted = false;
-      barrierx1 = 3;
-      barrierx2 = barrierx1 + 2.5; // Keep the same offset on reset
-    });
+    
   }
 
   void jump() {
