@@ -1,4 +1,53 @@
-node_modules
+# Flutter/Dart/Pub related
 .dart_tool/
 .packages
+.pub/
 build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE directories
+.idea/
+.vscode/
+*.iml
+
+# Flutter specific
+.flutter-plugins-dependencies
+.flutter-plugins
+.melos_tool/
+
+# Android
+android/.gradle/
+android/local.properties
+android/**/GeneratedPluginRegistrant.java
+android/app/key.properties
+
+# iOS
+ios/Pods/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+web/.dart_tool/
+
+# Linux
+linux/flutter/ephemeral/
+
+# macOS
+macos/Flutter/ephemeral/
+
+# Windows
+windows/flutter/ephemeral/
+
+# Files for app signing
+*.jks
+*.keystore
+
+# Symbolication data
+*.symbols
+
+# Misc
+.DS_Store
+*.log
+*.tmp
